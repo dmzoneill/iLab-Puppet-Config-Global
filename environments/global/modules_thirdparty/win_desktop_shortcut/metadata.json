@@ -1,0 +1,22 @@
+{
+  "project_page": "https://github.com/nigelkersten/win_desktop_shortcut-module",
+  "license": "Apache License, Version 2.0",
+  "source": "git@github.com:nigelkersten/win_desktop_shortcut-module.git",
+  "checksums": {
+    "manifests/init.pp": "094417511e3bed54ebb3aa6714bc17fd",
+    "Modulefile": "1620c82878e94287630a5b407d035a48",
+    "lib/facter/win_common_desktop_directory.rb": "44e781b635716196043addd6fa6949fe",
+    "README": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "dependencies": [
+
+  ],
+  "types": [
+
+  ],
+  "description": "This module places a shortcut to the PuppetLabs website on the desktop for all users on a Windows machine. It also demonstrates a simple fact to return Windows specific information as a fact.",
+  "summary": "Manages a shortcut on a Windows desktop for all users",
+  "name": "puppetlabs-win_desktop_shortcut",
+  "author": "puppetlabs",
+  "version": "0.0.4"
+}

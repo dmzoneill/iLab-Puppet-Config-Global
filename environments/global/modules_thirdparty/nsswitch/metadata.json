@@ -1,0 +1,26 @@
+{
+  "name": "trlinkin-nsswitch",
+  "version": "0.0.4",
+  "source": "https://github.com/trlinkin/puppet-nsswitch",
+  "author": "Thomas Linkin",
+  "license": "Apache License, Version 2.0",
+  "summary": "Module for managing the nsswitch.",
+  "description": "UNKNOWN",
+  "project_page": "https://github.com/trlinkin/puppet-nsswitch",
+  "dependencies": [
+    {
+      "name": "trlinkin/validate_multi",
+      "version_requirement": ">=0.1.0"
+    }
+  ],
+  "types": [
+
+  ],
+  "checksums": {
+    "Modulefile": "7b688314ca5c250e71170634e6843c72",
+    "README.md": "b98a55726cbb0a5f2048dee44bcbdccc",
+    "manifests/init.pp": "4bb5f5fff17abfc448441dd74e7a7040",
+    "manifests/params.pp": "dbcb858ff5fbcd923fb6db2f750aa5ae",
+    "templates/nsswitch.conf.erb": "0b9fde26ad34c10507b2fc7bf2027b18"
+  }
+}

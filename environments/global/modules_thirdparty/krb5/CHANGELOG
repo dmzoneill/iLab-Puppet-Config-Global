@@ -1,0 +1,8 @@
+2013-05-22 Aaron Russo <arusso@berkeley.edu> - 0.0.3
+* runcon is part of coreutils, and should not be installed via krb5
+
+2013-05-22 Aaron Russo <arusso@berkeley.edu> - 0.0.2
+* k5start is installed when an initscript is setup by default
+
+2013-05-22 Aaron Russo <arusso@berkeley.edu> - 0.0.1
+* Initial Release

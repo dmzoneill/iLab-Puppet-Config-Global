@@ -1,0 +1,16 @@
+# Delivered by puppet
+<%# environments/default/modules/intel-puppet-config/templates/puppet.erb %>
+[main]
+certname = <%= @fqdn %>
+server = <%= @fileserver %>
+pluginsync = true
+runinterval = 180
+#http_proxy_host = proxy.<%= @domain %>
+#http_proxy_port = 911
+
+[agent]
+classfile = $vardir/classes.txt
+localconfig = $vardir/localconfig
+environment = <%= @intelenv %>
+report = true
+

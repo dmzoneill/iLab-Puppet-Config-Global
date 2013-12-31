@@ -1,0 +1,26 @@
+{
+  "summary": "krb5 client management",
+  "types": [
+
+  ],
+  "author": "arusso",
+  "project_page": "https://github.com/arusso23/puppet-krb5",
+  "checksums": {
+    "manifests/k5start.pp": "baf69bd7bd7c0ee77e0ba8c55a0aad34",
+    "manifests/install.pp": "142a587e3bc8e7cd12d4afaccde3e3d8",
+    "Modulefile": "57918c2095f750911e1824382d6b7f79",
+    "manifests/k5start/install.pp": "9c7a22a2645e4f6429cb0afd8ade2eb0",
+    "manifests/k5start/initscript.pp": "6bc087238d76f1cd4eea0ac00683d3b5",
+    "CHANGELOG": "23f931822e299774b4696faa20353f40",
+    "templates/k5start.init.erb": "4f0b5a42dc450c6537ee6127e9e070fc",
+    "manifests/init.pp": "3d1d7fcec3422f3d9a38eec4f32edd14"
+  },
+  "source": "UNKNOWN",
+  "dependencies": [
+
+  ],
+  "license": "none",
+  "name": "arusso-krb5",
+  "version": "0.0.3",
+  "description": "krb5 management module supporting client configuration, kstart\n  and multiple keytabs"
+}

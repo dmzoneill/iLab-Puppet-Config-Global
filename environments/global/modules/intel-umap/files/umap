@@ -1,0 +1,222 @@
+#!/bin/ksh
+
+#
+# u* - access NIS custom maps - getting fields by field name
+#
+# umap - just describe the map
+# umatch - ypmatch equiv
+# ucat - ypcat equiv
+
+PATH=""
+for dir in /sbin /usr/sbin /bin /usr/bin /usr/ucb ; do
+    if [ -d "$dir" ]; then
+        if [ -z "$PATH" ]; then
+            PATH=$dir
+        else
+            PATH=${PATH}:$dir
+        fi
+    fi
+done
+export PATH
+
+comm=`basename $0`
+
+Usage() {
+    if [ "$comm" = "umap" ]; then
+        echo "Usage: $comm <map>"
+    elif [ "$comm" = "ucat" ]; then
+        echo "Usage: $comm <map> [-v] [-t <seperator>] [-d <domain>] [field1 [field2 [.....]]]"
+    elif [ "$comm" = "umatch" ]; then
+        echo "Usage: $comm <map> <entry> [-v] [-t <seperator>] [-d <domain>] [field1 [field2 [.....]]]"
+    else
+        echo "Unknown command"
+    fi
+    exit $1
+}
+
+# Verify that we are one of the recognized commands
+
+if [ "$comm" != "ucat" -a "$comm" != "umatch" -a "$comm" != "umap" ]; then
+    echo "Unknown command"
+    exit 1
+fi
+
+# Get the map name
+
+if [ $# -eq 0 ]; then
+    Usage 1
+fi
+
+map=$1
+shift
+
+case "$map" in
+    -h)
+        Usage 0
+        ;;
+    -*)
+        Usage 1
+        ;;
+esac
+
+# will we cat or match?
+
+if [ "$comm" = "umatch" ]; then
+    if [ $# -eq 0 ]; then
+        Usage 1
+    fi
+    entry=$1
+    shift
+    case "$entry" in
+        -h)
+            Usage 0
+            ;;
+        -*)
+            Usage 1
+            ;;
+    esac
+    ypcomm=ypmatch
+else
+    if [ "$comm" = "ucat" ]; then
+        entry=
+        ypcomm=ypcat
+#    else
+#        exit
+    fi
+fi
+
+# collect flags
+
+# the fields to show
+showfields=""
+# if to show the field names
+verbose=0
+# output seperator
+seperator=","
+domain=""
+
+checking=1
+while [ $checking -eq 1 ]; do
+    if [ "$1" = "-v" ]; then
+        verbose=1
+        shift
+    elif [ "$1" = "-t" ]; then
+        shift
+        if [ $# -eq 0 ]; then
+            Usage 1
+        fi
+        seperator='"'$1'"'
+        shift
+    elif [ "$1" = "-d" ]; then
+        shift
+        if [ $# -eq 0 ]; then
+            Usage 1
+        fi
+        domain="-d $1"
+        shift
+    else
+        checking=0
+    fi
+done
+
+mapexists=`ypwhich $domain -m $map 2>/dev/null |wc -l`
+if [ $mapexists -eq 0 ]; then
+    echo "No such map $map"
+    exit 1
+fi
+
+# Get the map definition from the map
+
+delimiter=`ypmatch $domain ':delimiter:' $map 2>/dev/null |sed 's/^:delimiter://'`
+if [ "$delimiter" = "" ]; then
+    echo "Failed to get delimiter for map $map"
+    exit 1
+fi
+
+fields=`ypmatch $domain ':key:' $map 2>/dev/null |sed 's/^:key:/key/'|tr "$delimiter" " "`
+if [ "$fields" = "" ]; then
+    echo "Failed to get schema of map $map"
+    exit 1
+fi
+
+if [ "$comm" = "umap" ]; then
+    echo $fields
+    exit 0
+fi
+
+# are specific fields requested - or should we show all?
+if [ $# -eq 0 ]; then
+    showfields=$fields
+    verbose=1
+else
+    showfields=$*
+fi
+
+i=0
+for tfield in $fields; do
+    i=`expr $i + 1`
+    eval key_$tfield=$i
+done
+
+first=1
+for sfield in $showfields; do
+    eval find=key_$sfield
+    eval found=$`echo $find`
+    verbosity=""
+    if [ "$verbose" = "1" ]; then
+        verbosity='"'"$sfield="'"'""
+    fi
+    if [ "$found" = "" ]; then
+        if [ "$first" = "1" ]; then
+            awkfields="$verbosity"'"NOFIELD"'
+        else
+            awkfields="$awkfields$seperator$verbosity"'"NOFIELD"'
+        fi
+    else
+        if [ "$first" = "1" ]; then
+            awkfields="$verbosity"'$'$found
+        else
+            awkfields="$awkfields$seperator$verbosity"'$'$found
+        fi
+    fi
+    first=0
+done
+
+# build awk command
+#first=1
+#for sfield in $showfields; do
+#    i=1
+#    found=0
+#    for field in $fields; do
+#        if [ "$field" = "$sfield" ]; then
+#            if [ "$verbose" = "1" ]; then
+#                verbosity='"'"$field="'"'""
+#            fi
+#            if [ "$first" = "1" ]; then
+#                awkfields="$verbosity"'$'$i
+#            else
+#                awkfields="$awkfields$seperator$verbosity"'$'$i
+#            fi
+#            found=1
+#            break
+#        fi
+#        i=`expr $i + 1`
+#    done
+#    if [ "$found" = "0" ]; then
+#        if [ "$first" = "1" ]; then
+#            awkfields='"NOFIELD"'
+#            first=0
+#        else
+#            awkfields="$awkfields$seperator"'"NOFIELD"'
+#        fi
+#    fi
+#    first=0
+#done
+
+# run command
+
+if [ "$delimiter" = "" -o "$delimiter" = " " ]; then
+    $ypcomm $domain $entry $map|awk '$1 !~ /^:key:/ && $1 !~ /^:delimiter:$/ '"{print $awkfields}"
+else
+    $ypcomm $domain $entry $map|awk -F$delimiter '$1 !~ /^:key:/ && $1 !~ /^:delimiter:$/ '"{print $awkfields}"
+fi

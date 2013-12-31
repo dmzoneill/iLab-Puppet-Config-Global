@@ -1,0 +1,13 @@
+---
+linux_classes:
+  - intel-puppet-config
+  - intel-umap
+  - intel-ypclient
+  - intel-autofs
+  - intel-resolv
+  - intel-mcollective
+windows_classes: ""
+fileserver: "puppet.%{::domain}"
+proxyhost: "proxy.%{::domain}"
+proxyport: "911"
+intelenv: "global"
