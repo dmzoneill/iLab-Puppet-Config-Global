@@ -14,33 +14,6 @@ updates:
       github-actions:
         patterns:
           - "*"
-  - package-ecosystem: "bundler"
-    directories:
-      - "/environments/global/modules_thirdparty/apache"
-      - "/environments/global/modules_thirdparty/apt"
-      - "/environments/global/modules_thirdparty/cinder"
-      - "/environments/global/modules_thirdparty/concat"
-      - "/environments/global/modules_thirdparty/firewall"
-      - "/environments/global/modules_thirdparty/inifile"
-      - "/environments/global/modules_thirdparty/java"
-      - "/environments/global/modules_thirdparty/keystone"
-      - "/environments/global/modules_thirdparty/mysql"
-      - "/environments/global/modules_thirdparty/ntp"
-      - "/environments/global/modules_thirdparty/passenger"
-      - "/environments/global/modules_thirdparty/php/tasks"
-      - "/environments/global/modules_thirdparty/ruby"
-      - "/environments/global/modules_thirdparty/stdlib"
-      - "/environments/global/modules_thirdparty/validate_multi"
-      - "/environments/global/modules_thirdparty/xinetd"
-    schedule:
-      interval: "weekly"
-    open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-    groups:
-      bundler:
-        patterns:
-          - "*"
   - package-ecosystem: "maven"
     directories:
       - "/environments/global/modules_thirdparty/apt/.forge-release"
